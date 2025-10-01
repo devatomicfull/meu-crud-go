@@ -1,6 +1,9 @@
 package routes
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/devatomicfull/meu-crud-go/src/controller"
+	"github.com/gin-gonic/gin"
+)
 
 // InitRoutes inicializa as rotas do módulo de usuários.
 // Recebe um *gin.RouterGroup como parâmetro, que permite agrupar
@@ -9,26 +12,26 @@ func InitRoutes(rg *gin.RouterGroup) {
 	// GET /getUserById/:userId
 	// Endpoint para buscar um usuário pelo ID.
 	// ":userId" é um parâmetro de rota dinâmico que será extraído na handler.
-	rg.GET("/getUserById/:userId")
+	rg.GET("/getUserById/:userId", controller.FindUserById)
 
 	// GET /getUserByEmail/:email
 	// Endpoint para buscar um usuário pelo email.
 	// ":email" é um parâmetro de rota dinâmico.
-	rg.GET("/getUserByEmail/:email")
+	rg.GET("/getUserByEmail/:email", controller.FindUserByEmail)
 
 	// POST /createUser/:userId
 	// Endpoint para criar um novo usuário.
 	// Pode receber dados do usuário no corpo da requisição (JSON).
-	rg.POST("/createUser/:userId")
+	rg.POST("/createUser/:userId", controller.CreateUser)
 
 	// PUT /updateUser/:userId
 	// Endpoint para atualizar um usuário existente.
 	// ":userId" identifica o usuário a ser atualizado.
-	rg.PUT("/updateUser/:userId")
+	rg.PUT("/updateUser/:userId", controller.UpdateUser)
 
 	// DELETE /deleteUser/:userId
 	// Endpoint para deletar um usuário pelo ID.
-	rg.DELETE("/deleteUser/:userId")
+	rg.DELETE("/deleteUser/:userId", controller.DeleteUser)
 }
 
 /*
