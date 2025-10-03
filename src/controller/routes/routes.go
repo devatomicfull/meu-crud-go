@@ -22,7 +22,7 @@ func InitRoutes(rg *gin.RouterGroup) {
 	// POST /createUser/:userId
 	// Endpoint para criar um novo usuário.
 	// Pode receber dados do usuário no corpo da requisição (JSON).
-	rg.POST("/createUser/:userId", controller.CreateUser)
+	rg.POST("/createUser", controller.CreateUser)
 
 	// PUT /updateUser/:userId
 	// Endpoint para atualizar um usuário existente.

@@ -1,7 +1,9 @@
 package controller
 
 import (
+	"fmt"
 	"github.com/devatomicfull/meu-crud-go/src/configuration/rest_erro"
+	"github.com/devatomicfull/meu-crud-go/src/controller/model/request"
 	"github.com/gin-gonic/gin"
 	"log"
 )
@@ -12,25 +14,33 @@ import (
 //
 // Exemplo de JSON esperado no body:
 //
-//	{
-//	  "name": "João Silva",
-//	  "email": "joao@email.com",
-//	  "password": "123456"
-//	}
+//		{
+//		  "name": "João Silva",
+//		  "email": "joao@email.com",
+//		  "password": "123456"
+//	   "age": 12
+//		}
 //
 // Exemplo de uso na rota:
 // POST /createUser
 func CreateUser(c *gin.Context) {
-	// Aqui será implementada a lógica para criar um novo usuário.
-	// Exemplo:
-	// var user User
-	// if err := c.ShouldBindJSON(&user); err != nil {
-	//     c.JSON(400, gin.H{"error": "Dados inválidos"})
-	//     return
-	// }
-	// salvar no banco...
-	// c.JSON(201, gin.H{"message": "Usuário criado com sucesso"})
-	err := rest_erro.NewBadRequestError("Você chamou a rota de forma incorreta.")
-	log.Printf("DEBUG: %+v\n", err)
-	c.JSON(err.Code, err)
+	var userRequest request.UserRequest
+
+	// Faz o binding e validação do JSON
+	if err := c.ShouldBindJSON(&userRequest); err != nil {
+		restErr := rest_erro.NewBadRequestError(
+			fmt.Sprintf("Existem alguns campos incorretos: %s", err.Error()))
+		c.JSON(restErr.Code, restErr)
+		return
+	}
+
+	log.Println(userRequest)
+	fmt.Println(userRequest)
+
+	// Sucesso: retorna usuário recebido
+	c.JSON(201, gin.H{
+		"message": "Usuário criado com sucesso",
+		"user":    userRequest,
+	})
+
 }
