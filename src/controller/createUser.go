@@ -2,10 +2,12 @@ package controller
 
 import (
 	"fmt"
-	"github.com/devatomicfull/meu-crud-go/src/configuration/rest_erro"
-	"github.com/devatomicfull/meu-crud-go/src/controller/model/request"
-	"github.com/gin-gonic/gin"
 	"log"
+
+	"github.com/devatomicfull/meu-crud-go/src/configuration/validation"
+	"github.com/devatomicfull/meu-crud-go/src/controller/model/request"
+	"github.com/devatomicfull/meu-crud-go/src/controller/model/response"
+	"github.com/gin-gonic/gin"
 )
 
 // CreateUser trata requisições POST para criar um novo usuário.
@@ -28,19 +30,24 @@ func CreateUser(c *gin.Context) {
 
 	// Faz o binding e validação do JSON
 	if err := c.ShouldBindJSON(&userRequest); err != nil {
-		restErr := rest_erro.NewBadRequestError(
-			fmt.Sprintf("Existem alguns campos incorretos: %s", err.Error()))
+		log.Printf("Error trying to marshal object, %s", err.Error())
+		restErr := validation.ValidateUserError(err)
+
 		c.JSON(restErr.Code, restErr)
 		return
 	}
 
-	log.Println(userRequest)
 	fmt.Println(userRequest)
 
-	// Sucesso: retorna usuário recebido
-	c.JSON(201, gin.H{
-		"message": "Usuário criado com sucesso",
-		"user":    userRequest,
-	})
+	// Monta resposta simulada
+	userResponse := response.UserResponse{
+		ID:    "test",
+		Name:  userRequest.Name,
+		Email: userRequest.Email,
+		Age:   userRequest.Age,
+	}
+
+	// Retorna resposta de sucesso
+	c.JSON(201, userResponse)
 
 }
